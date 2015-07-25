@@ -30,7 +30,7 @@
 struct sigcontext;
 struct sigcontext32;
 
-extern void _init_fpu(void);
+extern void _init_fpu(unsigned int);
 extern void _save_fp(struct task_struct *);
 extern void _restore_fp(struct task_struct *);
 
@@ -74,7 +74,7 @@ static inline int __enable_fpu(enum fpu_mode mode)
 		goto fr_common;
 
 	case FPU_64BIT:
-#if !(defined(CONFIG_CPU_MIPS32_R2) || defined(CONFIG_CPU_MIPS32_R6) \
+#if !(defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6) \
       || defined(CONFIG_64BIT))
 		/* we only have a 32-bit FPU */
 		return SIGFPE;
@@ -188,6 +188,7 @@ static inline void lose_fpu(int save)
 
 static inline int init_fpu(void)
 {
+	unsigned int fcr31 = current->thread.fpu.fcr31;
 	int ret = 0;
 
 	if (cpu_has_fpu) {
@@ -198,7 +199,7 @@ static inline int init_fpu(void)
 			return ret;
 
 		if (!cpu_has_fre) {
-			_init_fpu();
+			_init_fpu(fcr31);
 
 			return 0;
 		}
@@ -212,7 +213,7 @@ static inline int init_fpu(void)
 		config5 = clear_c0_config5(MIPS_CONF5_FRE);
 		enable_fpu_hazard();
 
-		_init_fpu();
+		_init_fpu(fcr31);
 
 		/* Restore FRE */
 		write_c0_config5(config5);

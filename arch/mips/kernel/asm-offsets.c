@@ -1,5 +1,5 @@
 /*
- * offset.c: Calculate pt_regs and task_struct offsets.
+ * asm-offsets.c: Calculate pt_regs and task_struct offsets.
  *
  * Copyright (C) 1996 David S. Miller
  * Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003 Ralf Baechle
@@ -92,7 +92,6 @@ void output_thread_info_defines(void)
 {
 	COMMENT("MIPS thread_info offsets.");
 	OFFSET(TI_TASK, thread_info, task);
-	OFFSET(TI_EXEC_DOMAIN, thread_info, exec_domain);
 	OFFSET(TI_FLAGS, thread_info, flags);
 	OFFSET(TI_TP_VALUE, thread_info, tp_value);
 	OFFSET(TI_CPU, thread_info, cpu);
